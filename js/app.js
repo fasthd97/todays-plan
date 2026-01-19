@@ -20,9 +20,13 @@ let isDarkMode = false;
 
 function init() {
     const today = new Date().toISOString().split('T')[0];
-    document.getElementById('dateInput').value = today;
+    const dateInput = document.getElementById('dateInput');
+    if (dateInput) dateInput.value = today;
+    
     const todayDay = days[new Date().getDay()];
-    document.getElementById(todayDay).checked = true;
+    const todayElement = document.getElementById(todayDay);
+    if (todayElement) todayElement.checked = true;
+    
     createScheduleRows();
     createTaskRows();
     setupAuthUI();
@@ -55,6 +59,8 @@ function createTaskRows() {
 function setupAuthUI() {
     const authSubmit = document.getElementById('authSubmit');
     const authToggleLink = document.getElementById('authToggleLink');
+    if (!authSubmit || !authToggleLink) return;
+    
     authSubmit.addEventListener('click', handleAuthSubmit);
     authToggleLink.addEventListener('click', () => {
         isSigningUp = !isSigningUp;
@@ -79,7 +85,7 @@ async function handleAuthSubmit() {
     const email = document.getElementById('authEmail').value;
     const password = document.getElementById('authPassword').value;
     if (!email || !password) {
-        alert('Please enter email and password');
+        showMessage('Please enter email and password', 'error');
         return;
     }
     try {
@@ -94,7 +100,7 @@ async function handleAuthSubmit() {
         else if (error.code === 'auth/invalid-email') message = 'Invalid email';
         else if (error.code === 'auth/weak-password') message = 'Password too weak (min 6 characters)';
         else if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') message = 'Invalid email or password';
-        alert(message);
+        showMessage(message, 'error');
     }
 }
 
@@ -121,7 +127,7 @@ onAuthStateChanged(auth, (user) => {
 
 function setupThemeToggle() {
     const toggle = document.getElementById('themeToggle');
-    toggle.addEventListener('click', toggleTheme);
+    if (toggle) toggle.addEventListener('click', toggleTheme);
 }
 
 function toggleTheme() {
@@ -135,10 +141,10 @@ function applyTheme(darkMode) {
     const toggle = document.getElementById('themeToggle');
     if (darkMode) {
         body.classList.add('dark-mode');
-        toggle.textContent = '☀️';
+        if (toggle) toggle.textContent = '☀️';
     } else {
         body.classList.remove('dark-mode');
-        toggle.textContent = '🌙';
+        if (toggle) toggle.textContent = '🌙';
     }
 }
 
@@ -315,8 +321,7 @@ function updateStatus(status) {
 }
 
 window.rollForward = async function() {
-    const confirmMsg = 'This will:\n• Move unchecked tasks to tomorrow\n• Clear completed items\n• Reset the date to tomorrow\n\nContinue?';
-    if (!confirm(confirmMsg)) return;
+    if (!showConfirm('This will:\n• Move unchecked tasks to tomorrow\n• Clear completed items\n• Reset the date to tomorrow\n\nContinue?')) return;
     const incompletePriorities = [];
     for (let i = 1; i <= 3; i++) {
         const val = document.getElementById(`priority${i}`).value.trim();
@@ -349,7 +354,7 @@ window.rollForward = async function() {
 };
 
 window.clearAll = async function(askConfirm = true) {
-    if (askConfirm && !confirm('Are you sure you want to clear all entries?')) return;
+    if (askConfirm && !showConfirm('Are you sure you want to clear all entries?')) return;
     document.querySelectorAll('input[type="text"], textarea').forEach(el => el.value = '');
     document.querySelectorAll('input[type="checkbox"]').forEach(el => el.checked = false);
     if (askConfirm) {
@@ -362,11 +367,11 @@ window.clearAll = async function(askConfirm = true) {
 };
 
 window.signOut = async function() {
-    if (confirm('Sign out? Your data is saved and will sync when you sign back in.')) {
+    if (showConfirm('Sign out? Your data is saved and will sync when you sign back in.')) {
         try {
             await firebaseSignOut(auth);
         } catch (error) {
-            alert('Error signing out');
+            showMessage('Error signing out', 'error');
         }
     }
 };
@@ -376,4 +381,21 @@ if (document.readyState === 'loading') {
 } else {
     init();
 }
-document.addEventListener('DOMContentLoaded', init);
+// Utility functions for better UX
+function showMessage(message, type = 'info') {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${type}`;
+    messageDiv.textContent = message;
+    messageDiv.style.cssText = `
+        position: fixed; top: 20px; right: 20px; z-index: 1000;
+        padding: 12px 20px; border-radius: 4px; color: white;
+        background: ${type === 'error' ? '#e74c3c' : '#2ecc71'};
+        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    `;
+    document.body.appendChild(messageDiv);
+    setTimeout(() => messageDiv.remove(), 3000);
+}
+
+function showConfirm(message) {
+    return confirm(message); // Keep for now, replace with custom modal later
+}

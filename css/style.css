@@ -1,0 +1,381 @@
+/* Base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #f5f5f5;
+    color: #333;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Header */
+.header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.header h1 {
+    font-size: 2.5rem;
+    font-weight: 300;
+    margin-bottom: 20px;
+}
+
+.date-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.date-input {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.days {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.day-checkbox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+}
+
+.day-label {
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+
+/* Main content */
+.main-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.section-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    text-transform: lowercase;
+}
+
+/* Schedule */
+.schedule-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.time-dot {
+    width: 8px;
+    height: 8px;
+    background: #666;
+    border-radius: 50%;
+    margin-right: 12px;
+}
+
+.schedule-input {
+    flex: 1;
+    border: none;
+    border-bottom: 1px solid #ddd;
+    padding: 4px 0;
+    font-size: 14px;
+    background: transparent;
+}
+
+/* Priorities */
+.priority-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.priority-number {
+    width: 24px;
+    height: 24px;
+    background: #333;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    margin-right: 12px;
+}
+
+.priority-input {
+    flex: 1;
+    border: none;
+    border-bottom: 1px solid #ddd;
+    padding: 8px 0;
+    font-size: 14px;
+    background: transparent;
+}
+
+/* Tasks */
+.task-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.task-checkbox {
+    margin-right: 12px;
+}
+
+.task-input {
+    flex: 1;
+    border: none;
+    border-bottom: 1px solid #ddd;
+    padding: 4px 0;
+    font-size: 14px;
+    background: transparent;
+}
+
+/* Notes */
+.notes-section {
+    grid-column: 1 / -1;
+    margin-top: 20px;
+}
+
+.notes-textarea {
+    width: 100%;
+    min-height: 100px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 12px;
+    font-size: 14px;
+    resize: vertical;
+    background: transparent;
+}
+
+/* Water tracker */
+.water-section {
+    margin-bottom: 30px;
+}
+
+.water-tracker {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.water-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+}
+
+.water-label {
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+/* Buttons */
+.buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.buttons button, .roll-forward-btn {
+    padding: 10px 20px;
+    border: 1px solid #333;
+    background: white;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.buttons button:hover, .roll-forward-btn:hover {
+    background: #f0f0f0;
+}
+
+/* Auth section */
+.auth-section {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.auth-box {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    width: 300px;
+    max-width: 90vw;
+}
+
+.auth-input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.auth-btn {
+    width: 100%;
+    padding: 12px;
+    background: #333;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-bottom: 15px;
+}
+
+.auth-toggle {
+    text-align: center;
+    font-size: 14px;
+}
+
+.auth-toggle a {
+    color: #333;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+/* Status and theme */
+.status-indicator {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    font-size: 12px;
+    padding: 8px 12px;
+    background: #f0f0f0;
+    border-radius: 4px;
+}
+
+.status-indicator.synced {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status-indicator.syncing {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.8);
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* DARK MODE STYLES */
+body.dark-mode {
+    background: #1a1a1a;
+    color: #e0e0e0;
+}
+
+body.dark-mode .date-input,
+body.dark-mode .auth-input,
+body.dark-mode .notes-textarea {
+    background: #2d2d2d;
+    border-color: #444;
+    color: #e0e0e0;
+}
+
+body.dark-mode .schedule-input,
+body.dark-mode .priority-input,
+body.dark-mode .task-input {
+    color: #e0e0e0;
+    border-bottom-color: #444;
+}
+
+body.dark-mode .time-dot {
+    background: #888;
+}
+
+body.dark-mode .priority-number {
+    background: #555;
+}
+
+body.dark-mode .buttons button,
+body.dark-mode .roll-forward-btn {
+    background: #2d2d2d;
+    border-color: #555;
+    color: #e0e0e0;
+}
+
+body.dark-mode .buttons button:hover,
+body.dark-mode .roll-forward-btn:hover {
+    background: #3d3d3d;
+}
+
+body.dark-mode .auth-box {
+    background: #2d2d2d;
+    color: #e0e0e0;
+}
+
+body.dark-mode .auth-btn {
+    background: #555;
+}
+
+body.dark-mode .auth-toggle a {
+    color: #e0e0e0;
+}
+
+body.dark-mode .status-indicator {
+    background: #2d2d2d;
+    color: #e0e0e0;
+}
+
+body.dark-mode .theme-toggle {
+    background: rgba(45,45,45,0.8);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .main-content {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .days {
+        justify-content: center;
+    }
+    
+    .buttons {
+        flex-direction: column;
+    }
+}
