@@ -7,7 +7,7 @@ import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, on
 import { getFirestore, doc, setDoc, getDoc, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 console.log('IMPORTING FIREBASE MODULES');
 
-javascriptconsole.log('APP.JS IMPORTS COMPLETE');
+//javascriptconsole.log('APP.JS IMPORTS COMPLETE');
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
