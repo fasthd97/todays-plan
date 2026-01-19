@@ -5,6 +5,8 @@ import { firebaseConfig } from './firebase-config.js';
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut as firebaseSignOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
 import { getFirestore, doc, setDoc, getDoc, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+console.log('IMPORTING FIREBASE MODULES');
+
 javascriptconsole.log('APP.JS IMPORTS COMPLETE');
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
