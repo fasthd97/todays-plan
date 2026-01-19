@@ -1,5 +1,4 @@
-import { firebaseConfig }
-from './firebase-config.js';
+import { firebaseConfig } from './firebase-config.js';
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut as firebaseSignOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
 import { getFirestore, doc, setDoc, getDoc, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
@@ -70,6 +69,98 @@ function setupAuthUI() {
         if (e.key === 'Enter') handleAuthSubmit();
     });
 }
+
+async function handleAuthSubmit() {
+    const email = document.getElementById('authEmail').value;
+    const password = document.getElementById('authPassword').value;
+    if (!email || !password) {
+        alert('Please enter email and password');
+        return;
+    }
+    try {
+        if (isSigningUp) {
+            await createUserWithEmailAndPassword(auth, email, password);
+        } else {
+            await signInWithEmailAndPassword(auth, email, password);
+        }
+    } catch (error) {
+        let message = 'Authentication failed';
+        if (error.code === 'auth/email-already-in-use') message = 'Email already in use';
+        else if (error.code === 'auth/invalid-email') message = 'Invalid email';
+        else if (error.code === 'auth/weak-password') message = 'Password too weak (min 6 characters)';
+        else if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') message = 'Invalid email or password';
+        alert(message);
+    }
+}
+
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        currentUser = user;
+        document.getElementById('authSection').classList.add('hidden');
+        document.getElementById('statusIndicator').textContent = `Signed in as ${user.email}`;
+        document.getElementById('statusIndicator').classList.add('synced');
+        loadThemeFromFirestore(user.uid);
+        listenToUserData(user.uid);
+        setupAutoSave();
+    } else {
+        currentUser = null;
+        document.getElementById('authSection').classList.remove('hidden');
+        document.getElementById('statusIndicator').textContent = 'Not connected';
+        document.getElementById('statusIndicator').classList.remove('synced', 'syncing');
+        if (unsubscribeFromData) {
+            unsubscribeFromData();
+            unsubscribeFromData = null;
+        }
+    }
+});
+
+function setupThemeToggle() {
+    const toggle = document.getElementById('themeToggle');
+    toggle.addEventListener('click', toggleTheme);
+}
+
+function toggleTheme() {
+    isDarkMode = !isDarkMode;
+    applyTheme(isDarkMode);
+    saveThemePreference(isDarkMode);
+}
+
+function applyTheme(darkMode) {
+    const body = document.body;
+    const toggle = document.getElementById('themeToggle');
+    if (darkMode) {
+        body.classList.add('dark-mode');
+        toggle.textContent = '☀️';
+    } else {
+        body.classList.remove('dark-mode');
+        toggle.textContent = '🌙';
+    }
+}
+
+async function saveThemePreference(darkMode) {
+    localStorage.setItem('darkMode', darkMode);
+    if (currentUser) {
+        try {
+            const docRef = doc(db, 'users', currentUser.uid, 'settings', 'preferences');
+            await setDoc(docRef, { darkMode }, { merge: true });
+        } catch (error) {
+            console.error('Error saving theme preference:', error);
+        }
+    }
+}
+
+function loadThemePreference() {
+    const savedTheme = localStorage.getItem('darkMode');
+    if (savedTheme !== null) {
+        isDarkMode = savedTheme === 'true';
+        applyTheme(isDarkMode);
+    } else {
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        isDarkMode = prefersDark;
+        applyTheme(isDarkMode);
+    }
+}
+
 async function loadThemeFromFirestore(userId) {
     try {
         const docRef = doc(db, 'users', userId, 'settings', 'preferences');
