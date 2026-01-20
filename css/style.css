@@ -65,7 +65,7 @@ body {
 /* Main content */
 .main-content {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
     gap: 30px;
     margin-bottom: 30px;
 }
@@ -378,4 +378,83 @@ body.dark-mode .theme-toggle {
     .buttons {
         flex-direction: column;
     }
+}
+/* Ideas section */
+.ideas-section {
+    margin-bottom: 30px;
+}
+
+.idea-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 12px;
+    padding: 12px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid #28a745;
+}
+
+.idea-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 4px 0;
+    font-size: 14px;
+    resize: none;
+    min-height: 20px;
+    font-family: inherit;
+}
+
+.idea-input:focus {
+    outline: none;
+    background: white;
+    border-radius: 4px;
+    padding: 8px;
+}
+
+.idea-delete {
+    background: none;
+    border: none;
+    color: #dc3545;
+    cursor: pointer;
+    padding: 4px;
+    margin-left: 8px;
+    border-radius: 4px;
+    opacity: 0.6;
+    transition: opacity 0.3s;
+}
+
+.idea-delete:hover {
+    opacity: 1;
+    background: #f8d7da;
+}
+
+.add-idea-btn {
+    width: 100%;
+    padding: 12px;
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.3s;
+}
+
+.add-idea-btn:hover {
+    background: #218838;
+}
+
+body.dark-mode .idea-item {
+    background: #2d2d2d;
+    border-left-color: #40c057;
+}
+
+body.dark-mode .idea-input:focus {
+    background: #3d3d3d;
+    color: #e0e0e0;
+}
+
+body.dark-mode .idea-delete:hover {
+    background: #4a2c2a;
 }

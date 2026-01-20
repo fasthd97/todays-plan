@@ -29,6 +29,7 @@ function init() {
     
     createScheduleRows();
     createTaskRows();
+    createIdeasList();
     setupAuthUI();
     setupThemeToggle();
     loadThemePreference();
@@ -54,6 +55,12 @@ function createTaskRows() {
         task.innerHTML = `<input type="checkbox" class="task-checkbox" id="task${i}"><input type="text" class="task-input" id="taskInput${i}" placeholder="">`;
         tasksList.appendChild(task);
     }
+}
+
+function createIdeasList() {
+    const ideasList = document.getElementById('ideasList');
+    ideasList.innerHTML = '';
+    // Ideas will be created dynamically when loaded from data
 }
 
 function setupAuthUI() {
@@ -235,6 +242,9 @@ function loadDataFromFirestore(data) {
             });
         }
         if (data.notes) document.getElementById('notes').value = data.notes;
+        if (data.ideas) {
+            renderIdeas(data.ideas);
+        }
         if (data.water) {
             data.water.forEach((checked, i) => {
                 const el = document.getElementById(`water${i + 1}`);
@@ -259,6 +269,7 @@ async function saveDataToFirestore() {
         schedule: [],
         priorities: [],
         tasks: [],
+        ideas: [],
         notes: document.getElementById('notes').value,
         water: [],
         lastUpdated: new Date().toISOString()
@@ -278,6 +289,14 @@ async function saveDataToFirestore() {
             text: document.getElementById(`taskInput${i}`).value
         });
     }
+    
+    // Collect ideas
+    const ideaInputs = document.querySelectorAll('.idea-input');
+    ideaInputs.forEach(input => {
+        if (input.value.trim()) {
+            data.ideas.push(input.value.trim());
+        }
+    });
     for (let i = 1; i <= 8; i++) {
         data.water.push(document.getElementById(`water${i}`).checked);
     }
@@ -333,6 +352,13 @@ window.rollForward = async function() {
         const val = document.getElementById(`taskInput${i}`).value.trim();
         if (val && !checked) incompleteTasks.push(val);
     }
+    
+    // Collect all ideas (they all roll forward)
+    const allIdeas = [];
+    const ideaInputs = document.querySelectorAll('.idea-input');
+    ideaInputs.forEach(input => {
+        if (input.value.trim()) allIdeas.push(input.value.trim());
+    });
     clearAll(false);
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
@@ -346,6 +372,10 @@ window.rollForward = async function() {
     for (let i = 0; i < Math.min(incompleteTasks.length, 8); i++) {
         document.getElementById(`taskInput${i}`).value = incompleteTasks[i];
     }
+    
+    // Restore all ideas
+    renderIdeas(allIdeas);
+    
     const overflow = [...incompletePriorities.slice(3), ...incompleteTasks.slice(8)];
     if (overflow.length > 0) {
         document.getElementById('notes').value = 'Carried over from yesterday:\n' + overflow.map(item => '• ' + item).join('\n');
@@ -399,3 +429,77 @@ function showMessage(message, type = 'info') {
 function showConfirm(message) {
     return confirm(message); // Keep for now, replace with custom modal later
 }
+// Ideas functionality
+function renderIdeas(ideas) {
+    const ideasList = document.getElementById('ideasList');
+    ideasList.innerHTML = '';
+    
+    ideas.forEach((idea, index) => {
+        const ideaItem = document.createElement('div');
+        ideaItem.className = 'idea-item';
+        ideaItem.innerHTML = `
+            <textarea class="idea-input" placeholder="Enter your idea..." rows="1">${idea}</textarea>
+            <button class="idea-delete" onclick="deleteIdea(${index})" title="Delete idea">×</button>
+        `;
+        ideasList.appendChild(ideaItem);
+        
+        // Auto-resize textarea
+        const textarea = ideaItem.querySelector('.idea-input');
+        textarea.addEventListener('input', autoResizeTextarea);
+        autoResizeTextarea.call(textarea);
+    });
+}
+
+function addNewIdea() {
+    const ideasList = document.getElementById('ideasList');
+    const ideaItem = document.createElement('div');
+    ideaItem.className = 'idea-item';
+    
+    const ideaIndex = document.querySelectorAll('.idea-item').length;
+    ideaItem.innerHTML = `
+        <textarea class="idea-input" placeholder="Enter your idea..." rows="1"></textarea>
+        <button class="idea-delete" onclick="deleteIdea(${ideaIndex})" title="Delete idea">×</button>
+    `;
+    
+    ideasList.appendChild(ideaItem);
+    
+    // Focus new idea input
+    const textarea = ideaItem.querySelector('.idea-input');
+    textarea.focus();
+    textarea.addEventListener('input', autoResizeTextarea);
+    
+    // Auto-save when new idea is added
+    if (currentUser) {
+        setTimeout(() => {
+            saveDataToFirestore();
+        }, 500);
+    }
+}
+
+function deleteIdea(index) {
+    const ideaItems = document.querySelectorAll('.idea-item');
+    if (ideaItems[index]) {
+        ideaItems[index].remove();
+        
+        // Re-index remaining delete buttons
+        document.querySelectorAll('.idea-delete').forEach((btn, i) => {
+            btn.setAttribute('onclick', `deleteIdea(${i})`);
+        });
+        
+        // Auto-save after deletion
+        if (currentUser) {
+            setTimeout(() => {
+                saveDataToFirestore();
+            }, 100);
+        }
+    }
+}
+
+function autoResizeTextarea() {
+    this.style.height = 'auto';
+    this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+}
+
+// Make functions globally available
+window.addNewIdea = addNewIdea;
+window.deleteIdea = deleteIdea;
