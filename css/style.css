@@ -13,7 +13,7 @@ body {
 }
 
 .container {
-    max-width: 800px;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
 }
@@ -66,8 +66,9 @@ body {
 .main-content {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
-    gap: 40px;
+    gap: 50px;
     margin-bottom: 40px;
+    width: 100%;
 }
 
 .section-title {
