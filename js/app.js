@@ -245,6 +245,9 @@ function loadDataFromFirestore(data) {
         if (data.ideas) {
             renderIdeas(data.ideas);
         }
+        if (data.studyItems) {
+            renderStudyItems(data.studyItems);
+        }
         if (data.water) {
             data.water.forEach((checked, i) => {
                 const el = document.getElementById(`water${i + 1}`);
@@ -270,6 +273,7 @@ async function saveDataToFirestore() {
         priorities: [],
         tasks: [],
         ideas: [],
+        studyItems: [],
         notes: document.getElementById('notes').value,
         water: [],
         lastUpdated: new Date().toISOString()
@@ -295,6 +299,19 @@ async function saveDataToFirestore() {
     ideaInputs.forEach(input => {
         if (input.value.trim()) {
             data.ideas.push(input.value.trim());
+        }
+    });
+    
+    // Collect study items
+    const studyItems = document.querySelectorAll('.study-item');
+    studyItems.forEach(item => {
+        const input = item.querySelector('.study-input');
+        const timeDisplay = item.querySelector('.study-time-display');
+        if (input && input.value.trim()) {
+            data.studyItems.push({
+                subject: input.value.trim(),
+                totalTime: parseInt(timeDisplay?.dataset.totalSeconds || '0')
+            });
         }
     });
     for (let i = 1; i <= 8; i++) {
@@ -439,7 +456,7 @@ function renderIdeas(ideas) {
         ideaItem.className = 'idea-item';
         ideaItem.innerHTML = `
             <textarea class="idea-input" placeholder="Enter your idea..." rows="1">${idea}</textarea>
-            <button class="idea-delete" onclick="deleteIdea(${index})" title="Delete idea">×</button>
+            <button class="idea-delete" onclick="deleteIdea(this)" title="Delete idea">×</button>
         `;
         ideasList.appendChild(ideaItem);
         
@@ -458,7 +475,7 @@ function addNewIdea() {
     const ideaIndex = document.querySelectorAll('.idea-item').length;
     ideaItem.innerHTML = `
         <textarea class="idea-input" placeholder="Enter your idea..." rows="1"></textarea>
-        <button class="idea-delete" onclick="deleteIdea(${ideaIndex})" title="Delete idea">×</button>
+        <button class="idea-delete" onclick="deleteIdea(this)" title="Delete idea">×</button>
     `;
     
     ideasList.appendChild(ideaItem);
@@ -502,4 +519,162 @@ function autoResizeTextarea() {
 
 // Make functions globally available
 window.addNewIdea = addNewIdea;
-window.deleteIdea = deleteIdea;
+window.deleteIdea = function(element) {
+    element.closest('.idea-item').remove();
+    
+    // Auto-save after deletion
+    if (currentUser) {
+        setTimeout(() => {
+            saveDataToFirestore();
+        }, 100);
+    }
+};
+// Study tracking functionality
+let studyTimers = new Map();
+
+function renderStudyItems(studyItems) {
+    const studyList = document.getElementById('studyList');
+    studyList.innerHTML = '';
+    
+    studyItems.forEach((item, index) => {
+        const studyItem = document.createElement('div');
+        studyItem.className = 'study-item';
+        studyItem.innerHTML = `
+            <div class="study-header">
+                <input type="text" class="study-input" placeholder="Subject to study..." value="${item.subject}">
+                <div class="study-controls">
+                    <div class="study-timer" id="timer-${index}">00:00</div>
+                    <button class="timer-btn" onclick="toggleTimer(${index})" id="btn-${index}">Start</button>
+                    <button class="study-delete" onclick="deleteStudyItem(${index})" title="Delete study item">×</button>
+                </div>
+            </div>
+            <div class="study-time-display" data-total-seconds="${item.totalTime}">
+                Total time: ${formatTime(item.totalTime)}
+            </div>
+        `;
+        studyList.appendChild(studyItem);
+    });
+}
+
+function addNewStudyItem() {
+    const studyList = document.getElementById('studyList');
+    const studyIndex = document.querySelectorAll('.study-item').length;
+    
+    const studyItem = document.createElement('div');
+    studyItem.className = 'study-item';
+    studyItem.innerHTML = `
+        <div class="study-header">
+            <input type="text" class="study-input" placeholder="Subject to study...">
+            <div class="study-controls">
+                <div class="study-timer" id="timer-${studyIndex}">00:00</div>
+                <button class="timer-btn" onclick="toggleTimer(${studyIndex})" id="btn-${studyIndex}">Start</button>
+                <button class="study-delete" onclick="deleteStudyItem(${studyIndex})" title="Delete study item">×</button>
+            </div>
+        </div>
+        <div class="study-time-display" data-total-seconds="0">
+            Total time: 0m
+        </div>
+    `;
+    
+    studyList.appendChild(studyItem);
+    
+    // Focus new study input
+    const input = studyItem.querySelector('.study-input');
+    input.focus();
+    
+    // Auto-save when new study item is added
+    if (currentUser) {
+        setTimeout(() => {
+            saveDataToFirestore();
+        }, 500);
+    }
+}
+
+function toggleTimer(index) {
+    const timerDisplay = document.getElementById(`timer-${index}`);
+    const button = document.getElementById(`btn-${index}`);
+    const timeDisplay = document.querySelector(`#studyList .study-item:nth-child(${index + 1}) .study-time-display`);
+    
+    if (studyTimers.has(index)) {
+        // Stop timer
+        clearInterval(studyTimers.get(index).interval);
+        studyTimers.delete(index);
+        button.textContent = 'Start';
+        button.classList.remove('stop');
+        
+        // Auto-save when timer stops
+        if (currentUser) {
+            setTimeout(() => {
+                saveDataToFirestore();
+            }, 100);
+        }
+    } else {
+        // Start timer
+        const startTime = Date.now();
+        const currentSeconds = parseInt(timeDisplay.dataset.totalSeconds || '0');
+        
+        const interval = setInterval(() => {
+            const elapsed = Math.floor((Date.now() - startTime) / 1000);
+            const totalSeconds = currentSeconds + elapsed;
+            
+            timerDisplay.textContent = formatTime(elapsed);
+            timeDisplay.textContent = `Total time: ${formatTime(totalSeconds)}`;
+            timeDisplay.dataset.totalSeconds = totalSeconds;
+        }, 1000);
+        
+        studyTimers.set(index, { interval, startTime });
+        button.textContent = 'Stop';
+        button.classList.add('stop');
+    }
+}
+
+function deleteStudyItem(index) {
+    // Stop timer if running
+    if (studyTimers.has(index)) {
+        clearInterval(studyTimers.get(index).interval);
+        studyTimers.delete(index);
+    }
+    
+    const studyItems = document.querySelectorAll('.study-item');
+    if (studyItems[index]) {
+        studyItems[index].remove();
+        
+        // Re-index remaining items
+        document.querySelectorAll('.study-item').forEach((item, i) => {
+            const timer = item.querySelector('.study-timer');
+            const button = item.querySelector('.timer-btn');
+            const deleteBtn = item.querySelector('.study-delete');
+            
+            timer.id = `timer-${i}`;
+            button.id = `btn-${i}`;
+            button.setAttribute('onclick', `toggleTimer(${i})`);
+            deleteBtn.setAttribute('onclick', `deleteStudyItem(${i})`);
+        });
+        
+        // Auto-save after deletion
+        if (currentUser) {
+            setTimeout(() => {
+                saveDataToFirestore();
+            }, 100);
+        }
+    }
+}
+
+function formatTime(seconds) {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+    
+    if (hours > 0) {
+        return `${hours}h ${minutes}m`;
+    } else if (minutes > 0) {
+        return `${minutes}m ${secs}s`;
+    } else {
+        return `${secs}s`;
+    }
+}
+
+// Make functions globally available
+window.addNewStudyItem = addNewStudyItem;
+window.toggleTimer = toggleTimer;
+window.deleteStudyItem = deleteStudyItem;

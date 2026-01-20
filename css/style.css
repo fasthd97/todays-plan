@@ -458,3 +458,133 @@ body.dark-mode .idea-input:focus {
 body.dark-mode .idea-delete:hover {
     background: #4a2c2a;
 }
+/* Study section */
+.study-section {
+    margin-bottom: 30px;
+}
+
+.study-item {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+    padding: 15px;
+    background: #f0f8ff;
+    border-radius: 8px;
+    border-left: 4px solid #007bff;
+}
+
+.study-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.study-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 4px 0;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.study-input:focus {
+    outline: none;
+    background: white;
+    border-radius: 4px;
+    padding: 8px;
+}
+
+.study-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.study-timer {
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    color: #007bff;
+    min-width: 60px;
+    text-align: center;
+}
+
+.timer-btn {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background 0.3s;
+}
+
+.timer-btn:hover {
+    background: #0056b3;
+}
+
+.timer-btn.stop {
+    background: #dc3545;
+}
+
+.timer-btn.stop:hover {
+    background: #c82333;
+}
+
+.study-delete {
+    background: none;
+    border: none;
+    color: #dc3545;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    opacity: 0.6;
+    transition: opacity 0.3s;
+}
+
+.study-delete:hover {
+    opacity: 1;
+    background: #f8d7da;
+}
+
+.study-time-display {
+    font-size: 12px;
+    color: #666;
+    margin-top: 5px;
+}
+
+.add-study-btn {
+    width: 100%;
+    padding: 12px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.3s;
+}
+
+.add-study-btn:hover {
+    background: #0056b3;
+}
+
+body.dark-mode .study-item {
+    background: #1a2332;
+    border-left-color: #4dabf7;
+}
+
+body.dark-mode .study-input:focus {
+    background: #2d3748;
+    color: #e0e0e0;
+}
+
+body.dark-mode .study-timer {
+    color: #4dabf7;
+}
+
+body.dark-mode .study-delete:hover {
+    background: #4a2c2a;
+}
