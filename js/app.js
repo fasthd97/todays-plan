@@ -700,3 +700,9 @@ window.addNewStudyItem = function() {
     studyList.appendChild(studyItem);
     studyItem.querySelector('.study-input').focus();
 };
+window.addNewStudyItem = function() {
+    document.getElementById('studyList').innerHTML += '<div class="study-item"><div class="study-header"><input type="text" class="study-input" placeholder="Subject to study..."><div class="study-controls"><div class="study-timer">00:00</div><button class="timer-btn">Start</button><button class="study-delete">×</button></div></div><div class="study-time-display">Total time: 0m</div></div>';
+};
+window.addNewStudyItem = function() {
+    document.getElementById('studyList').innerHTML += '<div class="study-item"><div class="study-header"><input type="text" class="study-input" placeholder="Subject to study..."><input type="text" class="study-time" placeholder="Time spent (e.g. 2h 30m)"><button class="study-delete">×</button></div></div>';
+};

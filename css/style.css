@@ -388,23 +388,25 @@ body.dark-mode .theme-toggle {
 .idea-item {
     display: flex;
     align-items: flex-start;
-    margin-bottom: 20px;
-    padding: 15px;
+    margin-bottom: 25px;
+    padding: 20px;
     background: #f8f9fa;
     border-radius: 8px;
     border-left: 4px solid #28a745;
+    min-height: 120px;
 }
 
 .idea-input {
     flex: 1;
-    border: none;
-    background: transparent;
-    padding: 8px;
+    border: 1px solid #ddd;
+    background: white;
+    padding: 12px;
     font-size: 14px;
     resize: none;
-    min-height: 60px;
+    min-height: 80px;
     font-family: inherit;
     width: 100%;
+    border-radius: 4px;
 }
 
 .idea-input:focus {
