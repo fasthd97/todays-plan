@@ -33,6 +33,11 @@ function init() {
     setupAuthUI();
     setupThemeToggle();
     loadThemePreference();
+    
+    // Ensure functions are globally available
+    window.addNewStudyItem = addNewStudyItem;
+    window.toggleTimer = toggleTimer;
+    window.deleteStudyItem = deleteStudyItem;
 }
 
 function createScheduleRows() {
