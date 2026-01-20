@@ -38,6 +38,7 @@ function init() {
     window.addNewStudyItem = addNewStudyItem;
     window.toggleTimer = toggleTimer;
     window.deleteStudyItem = deleteStudyItem;
+    window.addNewIdea = addNewIdea;
 }
 
 function createScheduleRows() {
