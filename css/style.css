@@ -481,17 +481,26 @@ body.dark-mode .idea-delete:hover {
 .study-header {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 15px;
     margin-bottom: 8px;
 }
 
 .study-input {
-    flex: 1;
+    flex: 2;
     border: none;
     background: transparent;
     padding: 4px 0;
     font-size: 14px;
     font-weight: 500;
+}
+
+.study-time {
+    flex: 1;
+    border: 1px solid #ddd;
+    background: white;
+    padding: 6px 8px;
+    font-size: 14px;
+    border-radius: 4px;
 }
 
 .study-input:focus {

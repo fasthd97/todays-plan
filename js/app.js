@@ -706,3 +706,6 @@ window.addNewStudyItem = function() {
 window.addNewStudyItem = function() {
     document.getElementById('studyList').innerHTML += '<div class="study-item"><div class="study-header"><input type="text" class="study-input" placeholder="Subject to study..."><input type="text" class="study-time" placeholder="Time spent (e.g. 2h 30m)"><button class="study-delete">×</button></div></div>';
 };
+window.addNewIdea = function() {
+    document.getElementById('ideasList').innerHTML += '<div class="idea-item"><textarea class="idea-input" placeholder="Enter your idea..." rows="3"></textarea><button class="idea-delete">×</button></div>';
+};
