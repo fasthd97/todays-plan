@@ -66,14 +66,14 @@ body {
 .main-content {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
-    gap: 30px;
-    margin-bottom: 30px;
+    gap: 40px;
+    margin-bottom: 40px;
 }
 
 .section-title {
     font-size: 18px;
     font-weight: 600;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
     text-transform: lowercase;
 }
 
@@ -387,8 +387,8 @@ body.dark-mode .theme-toggle {
 .idea-item {
     display: flex;
     align-items: flex-start;
-    margin-bottom: 12px;
-    padding: 12px;
+    margin-bottom: 20px;
+    padding: 15px;
     background: #f8f9fa;
     border-radius: 8px;
     border-left: 4px solid #28a745;
@@ -398,11 +398,12 @@ body.dark-mode .theme-toggle {
     flex: 1;
     border: none;
     background: transparent;
-    padding: 4px 0;
+    padding: 8px;
     font-size: 14px;
     resize: none;
-    min-height: 20px;
+    min-height: 60px;
     font-family: inherit;
+    width: 100%;
 }
 
 .idea-input:focus {
@@ -466,8 +467,8 @@ body.dark-mode .idea-delete:hover {
 .study-item {
     display: flex;
     flex-direction: column;
-    margin-bottom: 15px;
-    padding: 15px;
+    margin-bottom: 20px;
+    padding: 18px;
     background: #f0f8ff;
     border-radius: 8px;
     border-left: 4px solid #007bff;

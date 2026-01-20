@@ -520,7 +520,7 @@ function deleteIdea(index) {
 
 function autoResizeTextarea() {
     this.style.height = 'auto';
-    this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+    this.style.height = Math.max(this.scrollHeight, 60) + 'px';
 }
 
 // Make functions globally available
@@ -680,7 +680,23 @@ function formatTime(seconds) {
     }
 }
 
-// Make functions globally available
-window.addNewStudyItem = addNewStudyItem;
-window.toggleTimer = toggleTimer;
-window.deleteStudyItem = deleteStudyItem;
+window.addNewStudyItem = function() {
+    const studyList = document.getElementById('studyList');
+    const studyItem = document.createElement('div');
+    studyItem.className = 'study-item';
+    studyItem.innerHTML = `
+        <div class="study-header">
+            <input type="text" class="study-input" placeholder="Subject to study...">
+            <div class="study-controls">
+                <div class="study-timer">00:00</div>
+                <button class="timer-btn">Start</button>
+                <button class="study-delete">×</button>
+            </div>
+        </div>
+        <div class="study-time-display">
+            Total time: 0m
+        </div>
+    `;
+    studyList.appendChild(studyItem);
+    studyItem.querySelector('.study-input').focus();
+};
