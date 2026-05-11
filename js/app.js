@@ -76,19 +76,23 @@ function setupAuthUI() {
     
     authSubmit.addEventListener('click', handleAuthSubmit);
 
-    document.getElementById('forgotPasswordLink').addEventListener('click', async () => {
-        const email = document.getElementById('authEmail').value;
-        if (!email) {
-            showMessage('Enter your email above first', 'error');
-            return;
-        }
-        try {
-            await sendPasswordResetEmail(auth, email);
-            showMessage('Password reset email sent — check your inbox', 'success');
-        } catch (error) {
-            showMessage('Could not send reset email — check your email address', 'error');
-        }
-    });
+    const forgotLink = document.getElementById('forgotPasswordLink');
+    if (forgotLink) {
+        forgotLink.addEventListener('click', async () => {
+            const email = document.getElementById('authEmail').value;
+            if (!email) {
+                showMessage('Enter your email above first', 'error');
+                return;
+            }
+            try {
+                await sendPasswordResetEmail(auth, email);
+                showMessage('Password reset email sent — check your inbox', 'success');
+            } catch (error) {
+                console.error('Password reset error:', error);
+                showMessage('Could not send reset email: ' + error.message, 'error');
+            }
+        });
+    }
 
     authToggleLink.addEventListener('click', () => {
         isSigningUp = !isSigningUp;
