@@ -3,3 +3,13 @@ Thumbs.db
 .vscode/
 .idea/
 *.log
+# Environment variables — never commit these
+.env
+.env.local
+.env.*.local
+
+# Build output
+dist/
+
+# Dependencies
+node_modules/

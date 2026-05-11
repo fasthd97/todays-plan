@@ -1,0 +1,17 @@
+{
+  "name": "todays-plan",
+  "version": "1.0.0",
+  "description": "A daily productivity planner with Firebase sync and PWA support",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "firebase": "^10.7.1"
+  },
+  "devDependencies": {
+    "vite": "^5.3.1"
+  }
+}

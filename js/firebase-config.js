@@ -1,10 +1,14 @@
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+// Firebase configuration is loaded from environment variables.
+// Never commit real values here.
+//
+// For local development: copy .env.example to .env and fill in your values.
+// For GitHub Pages: add these as repository secrets in Settings → Secrets → Actions.
 
 export const firebaseConfig = {
-    apiKey: "AIzaSyDG2H4X_Y9gktM5afJa9qPCh97amsdWJrU",
-    authDomain: "tasklist-3a7bd.firebaseapp.com",
-    projectId: "tasklist-3a7bd",
-    storageBucket: "tasklist-3a7bd.firebasestorage.app",
-    messagingSenderId: "1057866266002",
-    appId: "1:1057866266002:web:3debd818119c97719d3d4b"
+  apiKey:            import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain:        import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId:         import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket:     import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId:             import.meta.env.VITE_FIREBASE_APP_ID,
 };
