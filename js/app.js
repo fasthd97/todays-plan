@@ -3,7 +3,7 @@ console.log('APP.JS LOADING');
 
 import { firebaseConfig } from './firebase-config.js';
 import { initializeApp } from 'firebase/app';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut as firebaseSignOut } from 'firebase/auth';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut as firebaseSignOut, sendPasswordResetEmail } from 'firebase/auth';
 import { getFirestore, doc, setDoc, getDoc, onSnapshot } from 'firebase/firestore';
 console.log('IMPORTING FIREBASE MODULES');
 
@@ -75,6 +75,21 @@ function setupAuthUI() {
     if (!authSubmit || !authToggleLink) return;
     
     authSubmit.addEventListener('click', handleAuthSubmit);
+
+    document.getElementById('forgotPasswordLink').addEventListener('click', async () => {
+        const email = document.getElementById('authEmail').value;
+        if (!email) {
+            showMessage('Enter your email above first', 'error');
+            return;
+        }
+        try {
+            await sendPasswordResetEmail(auth, email);
+            showMessage('Password reset email sent — check your inbox', 'success');
+        } catch (error) {
+            showMessage('Could not send reset email — check your email address', 'error');
+        }
+    });
+
     authToggleLink.addEventListener('click', () => {
         isSigningUp = !isSigningUp;
         if (isSigningUp) {
